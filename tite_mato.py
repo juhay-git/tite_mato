@@ -10,10 +10,14 @@ CELL_SIZE = 20
 GRID_WIDTH = 20
 GRID_HEIGHT = 15
 
+
 class SnakeGame(QGraphicsView):
     def __init__(self):
         super().__init__()
 
+        self.food = 0
+        self.snake = []
+        self.direction = 0
         self.setScene(QGraphicsScene(self))
         self.setRenderHint(QPainter.Antialiasing)
         self.setSceneRect(0, 0, CELL_SIZE * GRID_WIDTH, CELL_SIZE * GRID_HEIGHT)
@@ -27,7 +31,8 @@ class SnakeGame(QGraphicsView):
         key = event.key()
 
         if key in (Qt.Key_Left, Qt.Key_Right, Qt.Key_Up, Qt.Key_Down):
-            # Only update direction if the new direction is not opposite to the current direction
+            # Only update direction if the new direction is not opposite to the
+            # current direction
             if key == Qt.Key_Left and self.direction != Qt.Key_Right:
                 self.direction = key
             elif key == Qt.Key_Right and self.direction != Qt.Key_Left:
@@ -61,18 +66,33 @@ class SnakeGame(QGraphicsView):
         for segment in self.snake:
             x, y = segment
             self.scene().addRect(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE, QPen(Qt.black), QBrush(Qt.black))
+        # print food
+        fx, fy = self.food
+        self.scene().addRect(fx * CELL_SIZE, fy * CELL_SIZE, CELL_SIZE,
+                             CELL_SIZE, QPen(Qt.black), QBrush(Qt.red))
 
     def start_game(self):
         self.direction = Qt.Key_Right
+        self.food = self.spawn_food()
         self.snake = [(5, 5), (5, 6), (5, 7)]
 
         self.timer.start(300)
+
+    # add food
+    def spawn_food(self):
+        while True:
+            x = random.randint(0, GRID_WIDTH - 1)
+            y = random.randint(0, GRID_HEIGHT - 1)
+            if (x, y) not in self.snake:
+                return x, y
+
 
 def main():
     app = QApplication(sys.argv)
     game = SnakeGame()
     game.show()
     sys.exit(app.exec())
+
 
 if __name__ == "__main__":
     main()
