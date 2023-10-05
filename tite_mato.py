@@ -1,9 +1,11 @@
 # to run 'pip install PySide6' is required
-import sys
 import random
-from PySide6.QtWidgets import QApplication, QGraphicsView, QGraphicsScene, QMenu
-from PySide6.QtGui import QPainter, QPen, QBrush, QFont
+import sys
+
 from PySide6.QtCore import Qt, QTimer
+from PySide6.QtGui import QBrush, QFont, QPainter, QPen
+from PySide6.QtWidgets import (QApplication, QGraphicsScene, QGraphicsView,
+                               QMenu)
 
 # Constants
 CELL_SIZE = 20
@@ -131,7 +133,7 @@ class SnakeGame(QGraphicsView):
             if (x, y) not in self.snake:
                 return x, y
 
-
+# Testii
 def main():
     app = QApplication(sys.argv)
     game = SnakeGame()
