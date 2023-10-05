@@ -134,6 +134,7 @@ class SnakeGame(QGraphicsView):
                 return x, y
 
 # Testii
+# Lisää testiä
 def main():
     app = QApplication(sys.argv)
     game = SnakeGame()
@@ -143,3 +144,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
