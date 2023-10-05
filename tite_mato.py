@@ -19,6 +19,9 @@ class SnakeGame(QGraphicsView):
         self.snake = []
         self.direction = 0
         self.score = 0
+        # for levels
+        self.level_limit = 5
+        self.timer_delay = 300
         self.setScene(QGraphicsScene(self))
         self.setRenderHint(QPainter.Antialiasing)
         self.setSceneRect(0, 0, CELL_SIZE * GRID_WIDTH, CELL_SIZE * GRID_HEIGHT)
@@ -61,7 +64,6 @@ class SnakeGame(QGraphicsView):
         text_width = game_over_text.boundingRect().width()
         text_x = (self.width() - text_width) / 2
         game_over_text.setPos(text_x, GRID_HEIGHT * CELL_SIZE / 2)
-
     def update_game(self):
         new_head = 0
         head_x, head_y = self.snake[0]
@@ -89,6 +91,11 @@ class SnakeGame(QGraphicsView):
         if new_head == self.food:
             self.food = self.spawn_food()
             self.score += 1
+            # for levels
+            if self.score == self.level_limit:
+                self.level_limit += 5
+                self.timer_delay -= 50
+                self.timer.setInterval(self.timer_delay)
         else:
             self.snake.pop()
             self.scene().clear()
@@ -114,7 +121,7 @@ class SnakeGame(QGraphicsView):
         self.snake = [(5, 5), (5, 6), (5, 7)]
         # for score calculation
         self.score = 0
-        self.timer.start(300)
+        self.timer.start(self.timer_delay)
 
     # add food
     def spawn_food(self):
