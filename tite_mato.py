@@ -56,6 +56,12 @@ class SnakeGame(QGraphicsView):
         text_x = (self.width() - text_width) / 5
         start_text.setPos(text_x, GRID_HEIGHT * CELL_SIZE / 2)
 
+    def game_over_screen(self):
+        game_over_text = self.scene().addText("Game Over", QFont("Arial", 24))
+        text_width = game_over_text.boundingRect().width()
+        text_x = (self.width() - text_width) / 2
+        game_over_text.setPos(text_x, GRID_HEIGHT * CELL_SIZE / 2)
+
     def update_game(self):
         new_head = 0
         head_x, head_y = self.snake[0]
@@ -74,15 +80,19 @@ class SnakeGame(QGraphicsView):
                 0 <= new_head[0] < GRID_WIDTH) or not (
                 0 <= new_head[1] < GRID_HEIGHT):
             self.timer.stop()
+            self.scene().clear()
+            self.game_over_screen()
             return
 
         self.snake.insert(0, new_head)
-
+        # Pisteiden lasku
         if new_head == self.food:
             self.food = self.spawn_food()
             self.score += 1
         else:
             self.snake.pop()
+            self.scene().clear()
+            self.game_over_screen()
 
         self.print_game()
 
