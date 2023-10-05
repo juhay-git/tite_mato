@@ -64,6 +64,13 @@ class SnakeGame(QGraphicsView):
         text_width = game_over_text.boundingRect().width()
         text_x = (self.width() - text_width) / 2
         game_over_text.setPos(text_x, GRID_HEIGHT * CELL_SIZE / 2)
+        new_game = self.scene().addText("Press any key to start again",
+                                        QFont("Arial", 24))
+        text_width2 = new_game.boundingRect().width()
+        text_x = (self.width() - text_width2) / 2
+        new_game.setPos(text_x, GRID_HEIGHT-1 * CELL_SIZE / 2)
+        self.game_started = False
+
     def update_game(self):
         new_head = 0
         head_x, head_y = self.snake[0]
@@ -98,8 +105,6 @@ class SnakeGame(QGraphicsView):
                 self.timer.setInterval(self.timer_delay)
         else:
             self.snake.pop()
-            self.scene().clear()
-            self.game_over_screen()
 
         self.print_game()
 
