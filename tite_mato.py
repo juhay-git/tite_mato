@@ -18,6 +18,7 @@ class SnakeGame(QGraphicsView):
         self.food = 0
         self.snake = []
         self.direction = 0
+        self.score = 0
         self.setScene(QGraphicsScene(self))
         self.setRenderHint(QPainter.Antialiasing)
         self.setSceneRect(0, 0, CELL_SIZE * GRID_WIDTH, CELL_SIZE * GRID_HEIGHT)
@@ -43,6 +44,7 @@ class SnakeGame(QGraphicsView):
                 self.direction = key
     
     def update_game(self):
+        new_head = 0
         head_x, head_y = self.snake[0]
 
         if self.direction == Qt.Key_Left:
@@ -53,10 +55,21 @@ class SnakeGame(QGraphicsView):
             new_head = (head_x, head_y - 1)
         elif self.direction == Qt.Key_Down:
             new_head = (head_x, head_y + 1)
+        # update_game metodiin suuntien tarkistuksen jälkeen
+        # board limits
+        if new_head in self.snake or not (
+                0 <= new_head[0] < GRID_WIDTH) or not (
+                0 <= new_head[1] < GRID_HEIGHT):
+            self.timer.stop()
+            return
 
         self.snake.insert(0, new_head)
-  
-        self.snake.pop()    
+
+        if new_head == self.food:
+            self.food = self.spawn_food()
+            self.score += 1
+        else:
+            self.snake.pop()
 
         self.print_game()
 
@@ -70,12 +83,14 @@ class SnakeGame(QGraphicsView):
         fx, fy = self.food
         self.scene().addRect(fx * CELL_SIZE, fy * CELL_SIZE, CELL_SIZE,
                              CELL_SIZE, QPen(Qt.black), QBrush(Qt.red))
+        self.scene().addText(f"Score: {self.score}", QFont("Arial", 12))
 
     def start_game(self):
         self.direction = Qt.Key_Right
         self.food = self.spawn_food()
         self.snake = [(5, 5), (5, 6), (5, 7)]
-
+        # for score calculation
+        self.score = 0
         self.timer.start(300)
 
     # add food
